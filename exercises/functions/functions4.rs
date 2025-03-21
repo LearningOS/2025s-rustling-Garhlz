@@ -10,18 +10,16 @@
 
 
 fn main() {
-    let original_price = 51;
-    println!("Your sale price is {}", sale_price(original_price));
+    let price = 51;
+    let ans = sale_price(price);
+    println!("Your sale price is {}",ans);
 }
 
-fn sale_price(price: i32) -> i32 {
-    if is_even(price) {
-        price - 10
-    } else {
+fn sale_price(price : i32) -> i32 {
+    if price & 1 == 1 {
         price - 3
     }
-}
-
-fn is_even(num: i32) -> bool {
-    num % 2 == 0
+    else {
+        price - 10
+    }
 }

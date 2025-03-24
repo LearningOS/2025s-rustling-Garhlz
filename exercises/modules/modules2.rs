@@ -11,9 +11,9 @@
 
 mod delicious_snacks {
     // TODO: Fix these use statements
-    use self::fruits::PEAR as ???
-    use self::veggies::CUCUMBER as ???
-
+    pub use self::fruits::PEAR as fruit;
+    pub use self::veggies::CUCUMBER as veggie;
+    // 修改模块的文件结构，对外暴露另外的模块结构
     mod fruits {
         pub const PEAR: &'static str = "Pear";
         pub const APPLE: &'static str = "Apple";

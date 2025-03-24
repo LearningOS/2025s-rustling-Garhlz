@@ -9,6 +9,10 @@
 
 enum Message {
     // TODO: implement the message variant types based on their usage below
+    ChangeColor(u8,u8,u8),
+    Echo(String),
+    Move(Point), // 以上是元组结构体
+    Quit,
 }
 
 struct Point {
@@ -23,7 +27,7 @@ struct State {
     message: String
 }
 
-impl State {
+impl State { // 给结构体绑定方法
     fn change_color(&mut self, color: (u8, u8, u8)) {
         self.color = color;
     }
@@ -32,7 +36,7 @@ impl State {
         self.quit = true;
     }
 
-    fn echo(&mut self, s: String) { self.message = s }
+    fn echo(&mut self, s: String) { self.message = s } // 直接转移了所有权
 
     fn move_position(&mut self, p: Point) {
         self.position = p;
@@ -43,6 +47,14 @@ impl State {
         // variants
         // Remember: When passing a tuple as a function argument, you'll need
         // extra parentheses: fn function((t, u, p, l, e))
+        match message { // 意思是对于输入的这个枚举类型实例进行匹配
+            Message::ChangeColor(r,g,b) => self.change_color((r,g,b)),
+            // 注意这里的命名似乎是任意的，实际上是一种解构
+            // 如果是普通结构体，则是 Message::Move { x, y }
+            Message::Echo(s) => self.echo(s),
+            Message::Move(p) => self.move_position(p),
+            Message::Quit => self.quit(),
+        }
     }
 }
 

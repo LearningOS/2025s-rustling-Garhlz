@@ -8,11 +8,15 @@
 #[derive(Debug)]
 enum Message {
     // TODO: define the different variants used below
+    Move{x:i32,y:i32},
+    Echo(String),
+    ChangeColor(u8,u8,u8,),
+    Quit, // 实际是单元类型的结构体
 }
 
 impl Message {
     fn call(&self) {
-        println!("{:?}", self);
+        println!("{:?}", self); // 直接调用debug方法使用各个枚举即可
     }
 }
 

@@ -7,8 +7,7 @@
 
 
 fn main() {
-    let a = [0; 1000];
-
+    let a = [0; 1000]; // [type ; length]是数组的类型，而不是声明对象
     if a.len() >= 100 {
         println!("Wow, that's a big array!");
     } else {

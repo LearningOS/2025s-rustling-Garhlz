@@ -14,9 +14,15 @@ fn main() {
     if is_morning {
         println!("Good morning!");
     }
+    else{
+        println!("it's not morning now");
+    }
 
     let is_evening = false;// Finish the rest of this line like the example! Or make it be false!
     if is_evening {
         println!("Good evening!");
+    }
+    else {
+        println!("it's not evening now");
     }
 }

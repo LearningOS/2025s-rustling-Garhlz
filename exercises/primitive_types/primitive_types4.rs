@@ -11,6 +11,7 @@ fn slice_out_of_array() {
     let a = [1, 2, 3, 4, 5];
 
     let nice_slice = &a[1..4];
+    // 数组切片的使用方法，创建了一个不可变引用
 
     assert_eq!([2, 3, 4], nice_slice)
 }

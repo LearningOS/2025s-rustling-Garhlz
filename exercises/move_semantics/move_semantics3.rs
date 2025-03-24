@@ -14,7 +14,7 @@ fn main() {
 
     println!("{} has length {} content `{:?}`", "vec1", vec1.len(), vec1);
 
-    vec1.push(88);
+    vec1.push(88); // 隐式借用
 
     println!("{} has length {} content `{:?}`", "vec1", vec1.len(), vec1);
 }

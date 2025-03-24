@@ -3,7 +3,7 @@
 // Execute `rustlings hint if3` or use the `hint` watch subcommand for a hint.
 
 
-pub fn animal_habitat(animal: &str) -> &'static str {
+pub fn animal_habitat(animal: &str) -> &'static str { // Rust 的 if 既是语句，也是表达式，可以返回值的分支必须类型一致
     let identifier = if animal == "crab" {
         1
     } else if animal == "gopher" {
@@ -24,7 +24,7 @@ pub fn animal_habitat(animal: &str) -> &'static str {
     } else {
         "Unknown"
     };
-
+    // 总之就是创建了一个中间量，使用了if表达式特性
     habitat
 }
 

@@ -7,6 +7,7 @@
 
 
 pub fn foo_if_fizz(fizzish: &str) -> &str {
+    // 始终使用&str来传递string参数
     if fizzish == "fizz" {
         "foo"
     } else if fizzish == "fuzz" {

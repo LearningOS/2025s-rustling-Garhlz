@@ -10,3 +10,4 @@ For example, if you try to open a file and that operation fails because the file
 - [Generics](https://doc.rust-lang.org/book/ch10-01-syntax.html)
 - [Result](https://doc.rust-lang.org/rust-by-example/error/result.html)
 - [Boxing errors](https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/boxing_errors.html)
+

@@ -37,6 +37,25 @@ where
             right: None,
         }
     }
+    fn insert(&mut self, value : T){
+        match value.cmp(&self.value) {
+            Ordering::Less => {
+                if self.left.is_none(){
+                    self.left = Some(Box::new(TreeNode::new(value)));
+                } else {
+                    self.left.as_mut().unwrap().insert(value);
+                }
+            }
+            Ordering::Greater => {
+                if self.right.is_none() {
+                    self.right = Some(Box::new(TreeNode::new(value)));
+                } else {
+                    self.right.as_mut().unwrap().insert(value);
+                }
+            }
+            Ordering::Equal => {} // 重复不插入?
+        }
+    }
 }
 
 impl<T> BinarySearchTree<T>
@@ -50,25 +69,31 @@ where
 
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
-        //TODO
+        match self.root {
+            None => self.root = Some(Box::new(TreeNode::new(value))),
+            Some(ref mut node) => node.insert(value), // 自动解引用
+        } // 这里模式匹配只能使用ref而不是&,奇怪的规则?
+        //Option<Box<TreeNode<T>>>
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
-        //TODO
-        true
+        fn search_node<T : Ord> (node : &Option<Box<TreeNode<T>>>, value : T) -> bool {
+            match node {
+                None => false,
+                Some(ref n) => match value.cmp(&n.value) {
+                    Ordering::Equal => true,
+                    Ordering::Less => search_node(&n.left, value),
+                    Ordering::Greater => search_node(&n.right, value),
+                }
+            }
+        }
+
+        search_node(&self.root, value)
     }
 }
 
-impl<T> TreeNode<T>
-where
-    T: Ord,
-{
-    // Insert a node into the tree
-    fn insert(&mut self, value: T) {
-        //TODO
-    }
-}
+
 
 
 #[cfg(test)]

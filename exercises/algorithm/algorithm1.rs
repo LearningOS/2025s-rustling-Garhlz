@@ -2,7 +2,7 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -11,7 +11,8 @@ use std::vec::*;
 #[derive(Debug)]
 struct Node<T> {
     val: T,
-    next: Option<NonNull<Node<T>>>,
+    next: Option<NonNull<Node<T>>>, // NonNull表示可以为空的指针,Option不允许直接包装Box
+    // 大概理解了,总之是要在*mut Node, NonNull<Node> Box<Node>之间捣鼓转化
 }
 
 impl<T> Node<T> {
@@ -29,13 +30,7 @@ struct LinkedList<T> {
     end: Option<NonNull<Node<T>>>,
 }
 
-impl<T> Default for LinkedList<T> {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-impl<T> LinkedList<T> {
+impl<T> LinkedList<T>{
     pub fn new() -> Self {
         Self {
             length: 0,
@@ -43,7 +38,16 @@ impl<T> LinkedList<T> {
             end: None,
         }
     }
+}
 
+
+impl<T> Default for LinkedList<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl<T : Clone> LinkedList<T> {
     pub fn add(&mut self, obj: T) {
         let mut node = Box::new(Node::new(obj));
         node.next = None;
@@ -70,13 +74,39 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+    where T : Ord
 	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		let mut merged_list = LinkedList::new();
+
+        let mut ptr_a = list_a.start;
+        let mut ptr_b = list_b.start;
+
+        while let (Some(node_a), Some(node_b)) = (ptr_a,ptr_b) {
+            unsafe{
+                if node_a.as_ref().val <= node_b.as_ref().val {
+                    merged_list.add(node_a.as_ref().val.clone());
+                    ptr_a = node_a.as_ref().next;
+                }
+                else{
+                    merged_list.add(node_b.as_ref().val.clone());
+                    ptr_b = node_b.as_ref().next;
+                }
+            }
         }
+        while let Some(node_a) = ptr_a {
+            unsafe{
+                merged_list.add(node_a.as_ref().val.clone());
+                ptr_a = node_a.as_ref().next;
+            }
+        }
+
+        while let Some(node_b) = ptr_b {
+            unsafe{
+                merged_list.add(node_b.as_ref().val.clone());
+                ptr_b = node_b.as_ref().next;
+            }
+        }
+        merged_list
 	}
 }
 

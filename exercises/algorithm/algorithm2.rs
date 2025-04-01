@@ -46,34 +46,57 @@ impl<T> LinkedList<T> {
         }
     }
 
-    pub fn add(&mut self, obj: T) {
+    pub fn add(&mut self, obj : T) {
         let mut node = Box::new(Node::new(obj));
         node.next = None;
         node.prev = self.end;
-        let node_ptr = Some(unsafe { NonNull::new_unchecked(Box::into_raw(node)) });
+        let node_ptr = Some(unsafe{
+            NonNull::new_unchecked(Box::into_raw(node)) // 先变成裸指针,再包装成NonNull
+        });
         match self.end {
             None => self.start = node_ptr,
-            Some(end_ptr) => unsafe { (*end_ptr.as_ptr()).next = node_ptr },
+            Some(end_ptr) => unsafe{
+                (*end_ptr.as_ptr()).next = node_ptr // NonNull<Node> -> *mut Node -> Node 才可以直接对于next赋值
+            },
         }
         self.end = node_ptr;
         self.length += 1;
     }
 
-    pub fn get(&mut self, index: i32) -> Option<&T> {
+    pub fn get(&mut self, index : i32) -> Option<&T> {
         self.get_ith_node(self.start, index)
     }
 
-    fn get_ith_node(&mut self, node: Option<NonNull<Node<T>>>, index: i32) -> Option<&T> {
+    fn get_ith_node(&mut self, node : Option<NonNull<Node<T>>>, index : i32) -> Option<&T> {
         match node {
             None => None,
-            Some(next_ptr) => match index {
-                0 => Some(unsafe { &(*next_ptr.as_ptr()).val }),
-                _ => self.get_ith_node(unsafe { (*next_ptr.as_ptr()).next }, index - 1),
-            },
+            Some(next_ptr) => match index{
+                0 => Some(unsafe{
+                    &(*next_ptr.as_ptr()).val
+                }),
+                _ => self.get_ith_node(unsafe {
+                    (*next_ptr.as_ptr()).next
+                }, index - 1), // 递归调用即可
+            }
         }
     }
+
 	pub fn reverse(&mut self){
-		// TODO
+		if self.length <= 1 {
+            return
+        }
+        let mut current = self.start;
+        while let Some(mut node_ptr) = current {
+            unsafe {
+                let next = (*node_ptr.as_ptr()).next;
+                let prev = (*node_ptr.as_ptr()).prev; // NonNull<Node> -> *mut Node -> Node 然后操作
+                (*node_ptr.as_ptr()).next = prev;
+                (*node_ptr.as_ptr()).prev = next;
+
+                current = next;
+            }
+        }
+        std::mem::swap(&mut self.start, &mut self.end);
 	}
 }
 

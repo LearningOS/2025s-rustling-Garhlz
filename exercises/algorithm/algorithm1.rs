@@ -85,7 +85,7 @@ impl<T : Clone> LinkedList<T> {
 
         while let (Some(node_a), Some(node_b)) = (ptr_a,ptr_b) { // ptr_a和ptr_b都不为空
             unsafe{
-                if node_a.as_ref().val <= node_b.as_ref().val {
+                if node_a.as_ref().val <= node_b.as_ref().val { // 把NonNull<Node<T>>转化为&Node<T>来比较
                     merged_list.add(node_a.as_ref().val.clone());
                     ptr_a = node_a.as_ref().next;
                 }

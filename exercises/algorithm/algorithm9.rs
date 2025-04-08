@@ -2,7 +2,7 @@
 	heap
 	This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
+
 
 use std::cmp::Ord;
 use std::default::Default;
@@ -37,7 +37,17 @@ where
     }
 
     pub fn add(&mut self, value: T) {
-        //TODO
+        self.count += 1;
+        self.items.push(value);
+        let mut idx = self.count;
+        while idx > 1 {
+            let parent = self.parent_idx(idx);
+            if !(self.comparator)(&self.items[idx],&self.items[parent]) {
+                break;
+            } // comparator 决定了堆的类型
+            self.items.swap(idx, parent);
+            idx = parent;
+        }
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -56,9 +66,16 @@ where
         self.left_child_idx(idx) + 1
     }
 
-    fn smallest_child_idx(&self, idx: usize) -> usize {
-        //TODO
-		0
+    fn smallest_child_idx(&self, idx: usize) -> usize { // 应该叫做最优的子节点, 因为比较器没有确定
+        let left = self.left_child_idx(idx);
+        let right = self.right_child_idx(idx);
+        if right > self.count {
+            left
+        }
+        else if(self.comparator)(&self.items[left],&self.items[right]) {
+            left
+        }
+        else{right}
     }
 }
 
@@ -84,8 +101,25 @@ where
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
-		None
+        if self.is_empty(){
+            return None; 
+        }
+        if self.count == 1 {
+            self.count -= 1;
+            return self.items.pop();
+        }
+        let result = self.items.swap_remove(1);
+        self.count -= 1;
+        let mut idx = 1;
+        while self.children_present(idx) {
+            let child = self.smallest_child_idx(idx);
+            if !(self.comparator)(&self.items[child], &self.items[idx]) {
+                break;
+            }
+            self.items.swap(idx, child);
+            idx = child;
+        }
+        Some(result)
     }
 }
 

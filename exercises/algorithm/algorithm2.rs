@@ -7,13 +7,15 @@
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
 use std::vec::*;
-
+/*
+双向链表设计了所有权共享,要么用NonNull取消限制,要么使用refcell<rc>还得注意弱引用
+*/
 #[derive(Debug)]
 struct Node<T> {
     val: T,
     next: Option<NonNull<Node<T>>>,
     prev: Option<NonNull<Node<T>>>,
-}
+} 
 
 impl<T> Node<T> {
     fn new(t: T) -> Node<T> {

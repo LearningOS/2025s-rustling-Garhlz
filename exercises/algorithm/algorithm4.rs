@@ -3,7 +3,7 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
+
 use std::cmp::Ordering;
 use std::fmt::Debug;
 
@@ -43,7 +43,7 @@ where
                 if self.left.is_none(){
                     self.left = Some(Box::new(TreeNode::new(value)));
                 } else {
-                    self.left.as_mut().unwrap().insert(value);
+                    self.left.as_mut().unwrap().insert(value); // 递归调用, 但要解包
                 }
             }
             Ordering::Greater => {
@@ -73,7 +73,9 @@ where
             None => self.root = Some(Box::new(TreeNode::new(value))),
             Some(ref mut node) => node.insert(value), // 自动解引用
         } // 这里模式匹配只能使用ref而不是&,奇怪的规则?
+        // 意思就是 & 只能用在表达式中, 不可以用在模式匹配中
         //Option<Box<TreeNode<T>>>
+        // 真正的插入逻辑也绑定在了Node的实现中
     }
 
     // Search for a value in the BST

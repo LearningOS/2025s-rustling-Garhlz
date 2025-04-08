@@ -11,9 +11,11 @@ use std::vec::*;
 #[derive(Debug)]
 struct Node<T> {
     val: T,
-    next: Option<NonNull<Node<T>>>, // NonNull表示可以为空的指针,Option不允许直接包装Box
+    next: Option<NonNull<Node<T>>>, // NonNull表示可以为空的指针,Option不允许直接包装Box.不是这样的
     // 大概理解了,总之是要在*mut Node, NonNull<Node> Box<Node>之间捣鼓转化
+    // 链表必须涉及多重所有权的问题,这里单向链表直接用Box也可以
 }
+
 
 impl<T> Node<T> {
     fn new(t: T) -> Node<T> {
@@ -27,7 +29,7 @@ impl<T> Node<T> {
 struct LinkedList<T> {
     length: u32,
     start: Option<NonNull<Node<T>>>,
-    end: Option<NonNull<Node<T>>>,
+    end: Option<NonNull<Node<T>>>, // 同时存储头和尾, 但是都要用Option<NonNull<Node<T>>>来表示
 }
 
 impl<T> LinkedList<T>{
@@ -81,7 +83,7 @@ impl<T : Clone> LinkedList<T> {
         let mut ptr_a = list_a.start;
         let mut ptr_b = list_b.start;
 
-        while let (Some(node_a), Some(node_b)) = (ptr_a,ptr_b) {
+        while let (Some(node_a), Some(node_b)) = (ptr_a,ptr_b) { // ptr_a和ptr_b都不为空
             unsafe{
                 if node_a.as_ref().val <= node_b.as_ref().val {
                     merged_list.add(node_a.as_ref().val.clone());
